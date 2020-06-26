@@ -1,0 +1,100 @@
+   0  $accept : phrase $end
+
+   1  phrase : cart_animal CART
+   2         | work_animal PLOW
+
+   3  cart_animal : HORSE AND
+   4              | GOAT AND
+
+   5  work_animal : HORSE AND
+   6              | OX AND
+
+state 0
+	$accept : . phrase $end  (0)
+
+	HORSE  shift 1
+	GOAT  shift 2
+	OX  shift 3
+	.  error
+
+	phrase  goto 4
+	cart_animal  goto 5
+	work_animal  goto 6
+
+
+state 1
+	cart_animal : HORSE . AND  (3)
+	work_animal : HORSE . AND  (5)
+
+	AND  shift 7
+	.  error
+
+
+state 2
+	cart_animal : GOAT . AND  (4)
+
+	AND  shift 8
+	.  error
+
+
+state 3
+	work_animal : OX . AND  (6)
+
+	AND  shift 9
+	.  error
+
+
+state 4
+	$accept : phrase . $end  (0)
+
+	$end  accept
+
+
+state 5
+	phrase : cart_animal . CART  (1)
+
+	CART  shift 10
+	.  error
+
+
+state 6
+	phrase : work_animal . PLOW  (2)
+
+	PLOW  shift 11
+	.  error
+
+
+state 7
+	cart_animal : HORSE AND .  (3)
+	work_animal : HORSE AND .  (5)
+
+	CART  reduce 3
+	PLOW  reduce 5
+
+
+state 8
+	cart_animal : GOAT AND .  (4)
+
+	.  reduce 4
+
+
+state 9
+	work_animal : OX AND .  (6)
+
+	.  reduce 6
+
+
+state 10
+	phrase : cart_animal CART .  (1)
+
+	.  reduce 1
+
+
+state 11
+	phrase : work_animal PLOW .  (2)
+
+	.  reduce 2
+
+
+8 terminals, 4 nonterminals
+7 grammar rules, 12 states
